@@ -1,0 +1,26 @@
+pipeline {
+    agent any 
+    
+    environment {
+        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+    }
+    
+    stages {
+        stage ('Docker login') {
+            
+            steps {
+                sh " echo $DOCKERHUB_CREDENTIAL_PSW | docler login -u $DOCKERHUB_CREDENTIAL_USR --password-stdin"
+            }
+            
+        }
+        
+        stage ('Docker build & and push ') {
+            steps {
+                sh """
+                cd python
+                ansible-playbook playbook.yml
+                """
+            }
+        }
+    }
+}
